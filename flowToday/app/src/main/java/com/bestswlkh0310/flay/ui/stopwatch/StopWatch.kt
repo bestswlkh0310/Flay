@@ -1,5 +1,6 @@
 package com.bestswlkh0310.flay.ui.stopwatch
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -79,7 +81,7 @@ fun StopWatch(
             ) {
                 FlayIconButton(
                     iconId = R.drawable.ic_add,
-                    contentDescription = "add"
+                    contentDescription = "add",
                 ) {
                     // TODO: callback  func
                 }
@@ -91,7 +93,7 @@ fun StopWatch(
                     text = it.title,
                     modifier = Modifier
                         .padding(top = 35.dp, start = 13.dp),
-                    color = main150s2
+                    color = /*if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else */MaterialTheme.colorScheme.onSecondary
                 )
                 Row(
                     verticalAlignment = Alignment.Bottom,
@@ -127,9 +129,24 @@ fun Preview() {
         Surface(
             modifier = Modifier
                 .fillMaxSize(),
-            color = main50
+            color = MaterialTheme.colorScheme.background
         ) {
             StopWatch(lazyListState =  rememberLazyListState())
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun DarkPreview() {
+    FlayTheme(darkTheme = true) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            StopWatch(lazyListState =  rememberLazyListState())
+        }
+    }
+}
+

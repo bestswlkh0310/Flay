@@ -11,7 +11,7 @@ enum class NAV_ROUTE(
 }
 
 
-class FlayNavigationActions(navHostController: NavHostController) {
+class FlayNavigationActions(navHostController: NavHostController) {/*
     val navTo: (NAV_ROUTE) -> Unit = {
         navHostController.navigate(it.title) {
             launchSingleTop = it.isSingleTon
@@ -20,5 +20,5 @@ class FlayNavigationActions(navHostController: NavHostController) {
 
     val goBack: () -> Unit = {
         navHostController.navigateUp()
-    }
+    }*/
 }

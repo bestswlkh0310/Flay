@@ -1,12 +1,12 @@
 package com.bestswlkh0310.flay.ui
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -56,17 +56,10 @@ fun FlayApp() {
                     size = 29.dp
                 ) {
                     coroutineScope.launch {
-                        Log.d("TAG", "click - MainScreenView() called")
                         lazyListState.animateScrollToItem(0)
                     }
-                    Log.d(
-                        "TAG",
-                        "${lazyListState.firstVisibleItemIndex}, ${lazyListState.firstVisibleItemScrollOffset}- MainScreenView() called"
-                    )
-                    // TODO: ㅇㅏ래로 내리면 나타나고 클릭하면 맨 위로 올라가도록
                 }
             }
-
         },
         containerColor = Color.Transparent
     ) {

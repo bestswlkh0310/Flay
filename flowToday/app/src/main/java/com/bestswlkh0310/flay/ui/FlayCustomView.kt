@@ -3,6 +3,7 @@ package com.bestswlkh0310.flay.ui
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -25,6 +26,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.contentColorFor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -69,7 +71,7 @@ fun FlayBottomNavigation(
 fun FlayText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = main150,
+    color: Color = MaterialTheme.colorScheme.secondary,
     fontSize: TextUnit = 15.sp,
 ) {
     Text(
@@ -95,7 +97,7 @@ fun FlayBottomButton(
         content = content,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
-            contentColor = main130
+            contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(20.dp)
     )
@@ -140,11 +142,12 @@ fun FlayIconButton(
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = contentDescription,
-            tint = main150,
+            tint = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .size(size)
                 .offset(x = (size.div(2)), y = size.div(2))
         )
+        MaterialTheme.colorScheme
     }
 }
 
@@ -176,7 +179,7 @@ fun FlayLazyColumnItem(
     Box(
         modifier = modifier
             .drawColoredShadow(Color.Black, 0.04f, 15.dp, 4.dp, 1.5.dp, 0.0.dp)
-            .background(main30, shape = RoundedCornerShape(15.dp))
+            .background(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .height(height)
             .padding(horizontal = 9.dp)
