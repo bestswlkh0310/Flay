@@ -1,4 +1,4 @@
-package com.bestswlkh0310.flay.dto
+package com.bestswlkh0310.flay.model
 
 data class TimeDto(
     val totalDay: Int,

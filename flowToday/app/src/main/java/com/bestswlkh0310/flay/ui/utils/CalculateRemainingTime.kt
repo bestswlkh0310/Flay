@@ -1,7 +1,6 @@
-package com.bestswlkh0310.flay.util
+package com.bestswlkh0310.flay.ui.utils
 
-import com.bestswlkh0310.flay.dto.TimeDto
-import java.time.Duration
+import com.bestswlkh0310.flay.model.TimeDto
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit

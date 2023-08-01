@@ -1,10 +1,6 @@
-package com.bestswlkh0310.flay.view.stopwatch
+package com.bestswlkh0310.flay.ui.stopwatch
 
-import android.util.Log
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,31 +10,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bestswlkh0310.flay.R
-import com.bestswlkh0310.flay.dto.StopWatchDto
-import com.bestswlkh0310.flay.theme.FlayTheme
-import com.bestswlkh0310.flay.theme.main150s2
-import com.bestswlkh0310.flay.theme.main50
-import com.bestswlkh0310.flay.util.CalculateRemainingTime.calculateRemainingTime
-import com.bestswlkh0310.flay.view.FlayIconButton
-import com.bestswlkh0310.flay.view.FlayLazyColumn
-import com.bestswlkh0310.flay.view.FlayLazyColumnItem
-import com.bestswlkh0310.flay.view.FlayText
-import com.bestswlkh0310.flay.view.FlayTitle
-import com.bestswlkh0310.flay.view.RouteAction
+import com.bestswlkh0310.flay.model.StopWatchDto
+import com.bestswlkh0310.flay.ui.theme.FlayTheme
+import com.bestswlkh0310.flay.ui.theme.main150s2
+import com.bestswlkh0310.flay.ui.theme.main50
+import com.bestswlkh0310.flay.ui.utils.CalculateRemainingTime.calculateRemainingTime
+import com.bestswlkh0310.flay.ui.FlayIconButton
+import com.bestswlkh0310.flay.ui.FlayLazyColumn
+import com.bestswlkh0310.flay.ui.FlayLazyColumnItem
+import com.bestswlkh0310.flay.ui.FlayText
+import com.bestswlkh0310.flay.ui.FlayTitle
+import com.bestswlkh0310.flay.ui.FlayNavigationActions
 
 @Composable
 fun StopWatch(
-    routeAction: RouteAction? = null,
+    routeAction: FlayNavigationActions? = null,
     lazyListState: LazyListState
 ) {
     val testCase = listOf(

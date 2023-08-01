@@ -1,4 +1,4 @@
-package com.bestswlkh0310.flay.theme
+package com.bestswlkh0310.flay.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

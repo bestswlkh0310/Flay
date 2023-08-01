@@ -1,9 +1,7 @@
 package com.bestswlkh0310.flay
 
-import com.bestswlkh0310.flay.util.CalculateRemainingTime
+import com.bestswlkh0310.flay.ui.utils.CalculateRemainingTime
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).

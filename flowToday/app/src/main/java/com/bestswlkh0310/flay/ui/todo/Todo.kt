@@ -1,4 +1,4 @@
-package com.bestswlkh0310.flay.view.todo
+package com.bestswlkh0310.flay.ui.todo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
