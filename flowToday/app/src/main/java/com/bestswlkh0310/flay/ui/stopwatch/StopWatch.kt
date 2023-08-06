@@ -138,7 +138,7 @@ fun StopWatch(
                         while (true) {
                             delay(1000)
                             deadline = calculateRemainingTime(it.deadline)
-                            Log.d("TAG", "${it.deadline} - StopWatch() called")
+//                            Log.d("TAG", "${it.deadline} - StopWatch() called")
                         }
                     }
                     val modi = Modifier.padding(bottom = 8.dp, end = 4.dp)
