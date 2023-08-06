@@ -13,12 +13,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = main30,
-    secondary = main150,
-    onSecondary = main150s2,
-    tertiary = main100,
-    background = main50,
-    surface = main130,
+    primary = primary,
+    secondary = secondary,
+    onSecondary = onSecondary,
+    tertiary = tertiary,
+    background = background,
+    surface = surface,
     scrim = Color.Black.copy(0.4f)
 )
 
@@ -46,7 +46,7 @@ fun FlayTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = if (darkTheme) backgroundd.toArgb() else main50.toArgb()
+            window.statusBarColor = if (darkTheme) backgroundd.toArgb() else background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

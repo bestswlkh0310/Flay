@@ -1,8 +1,8 @@
 package com.bestswlkh0310.flay.ui.stopwatch
 
 import android.util.Log
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -26,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bestswlkh0310.flay.R
 import com.bestswlkh0310.flay.model.StopWatchDto
+import com.bestswlkh0310.flay.ui.FlayBottomButton
 import com.bestswlkh0310.flay.ui.theme.FlayTheme
 import com.bestswlkh0310.flay.ui.utils.CalculateRemainingTime.calculateRemainingTime
 import com.bestswlkh0310.flay.ui.FlayIconButton
@@ -36,14 +39,18 @@ import com.bestswlkh0310.flay.ui.FlayLazyColumnItem
 import com.bestswlkh0310.flay.ui.FlayText
 import com.bestswlkh0310.flay.ui.FlayTitle
 import com.bestswlkh0310.flay.ui.FlayNavigationActions
+import com.bestswlkh0310.flay.ui.component.AddStopWatch
 import kotlinx.coroutines.delay
 
 @Composable
 fun StopWatch(
     routeAction: FlayNavigationActions? = null,
-    lazyListState: LazyListState
+    lazyListState: LazyListState,
+    viewModel: StopWatchViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    var isDialog by remember { mutableStateOf(false) }
+
     val testCase = listOf(
                 StopWatchDto(
                     title = "지구 멸망",
@@ -71,6 +78,23 @@ fun StopWatch(
                 ),
         )
 
+    if (isDialog) {
+        AddStopWatch(title ="제목과 종료일 입력해주세요", primaryButton = {
+            FlayBottomButton(onClick = {
+                isDialog = false
+            }) {
+                FlayText(text = "완료")
+            }
+        }, secondaryButton = {
+            FlayBottomButton(onClick = {
+                isDialog = false
+            }) {
+                FlayText(text = "취소")
+            }
+        },
+            onDismiss = { isDialog = false }, viewModel = viewModel)
+    }
+
     FlayLazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -88,11 +112,13 @@ fun StopWatch(
                 FlayIconButton(
                     iconId = R.drawable.ic_add,
                     contentDescription = "add",
-                ) {
-                    // TODO: callback  func
-                }
+                    onClick = {
+                        isDialog = true
+                    }
+                )
             }
         }
+
         items(testCase) {
             FlayLazyColumnItem {
                 FlayText(

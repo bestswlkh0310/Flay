@@ -7,6 +7,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -21,27 +22,40 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Surface
+import androidx.compose.material.TextField
 import androidx.compose.material.contentColorFor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCompositionContext
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.android.InternalPlatformTextApi
+import androidx.compose.ui.text.android.animation.SegmentType
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bestswlkh0310.flay.ui.theme.main130
-import com.bestswlkh0310.flay.ui.theme.main150
-import com.bestswlkh0310.flay.ui.theme.main30
 import com.bestswlkh0310.flay.ui.theme.noToSansKr
 
 @Composable
@@ -85,6 +99,40 @@ fun FlayText(
 }
 
 @Composable
+fun FlayTextField(
+    value: String,
+    modifier: Modifier = Modifier,
+    onChange: (String) -> Unit,
+    paddingHorizontal: Dp = 8.dp
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = paddingHorizontal)
+    ) {
+        BasicTextField(
+            value = value,
+            modifier = modifier,
+            textStyle = TextStyle(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp
+            ),
+            onValueChange = onChange,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.secondary),
+        )
+        Spacer(
+            modifier = Modifier.height(3.dp)
+        )
+        Divider(
+            modifier = Modifier.padding(horizontal = paddingHorizontal),
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
+
+@Composable
 fun FlayBottomButton(
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
@@ -94,13 +142,14 @@ fun FlayBottomButton(
     Button(
         modifier = modifier,
         onClick = onClick,
-        content = content,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surface
         ),
-        shape = RoundedCornerShape(20.dp)
-    )
+        shape = RoundedCornerShape(20.dp),
+    ) {
+        content()
+    }
 }
 
 @SuppressLint("ModifierParameter")
@@ -179,7 +228,10 @@ fun FlayLazyColumnItem(
     Box(
         modifier = modifier
             .drawColoredShadow(Color.Black, 0.04f, 15.dp, 4.dp, 1.5.dp, 0.0.dp)
-            .background(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(15.dp))
+            .background(
+                if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(15.dp)
+            )
             .fillMaxWidth()
             .height(height)
             .padding(horizontal = 9.dp)

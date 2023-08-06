@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -19,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.bestswlkh0310.flay.R
-import com.bestswlkh0310.flay.ui.theme.main30
+import com.bestswlkh0310.flay.ui.theme.primary
 import kotlinx.coroutines.launch
 
 
@@ -52,7 +51,7 @@ fun FlayApp() {
                         .drawColoredShadow(Color.Black, 0.1f, 50.dp, 4.dp, 1.5.dp, 0.dp),
                     iconId = R.drawable.ic_up,
                     contentDescription = "up",
-                    containerColor = main30,
+                    containerColor = primary,
                     size = 29.dp
                 ) {
                     coroutineScope.launch {
