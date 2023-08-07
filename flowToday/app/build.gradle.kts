@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = "com.bestswlkh0310.flay"
 
     defaultConfig {
         applicationId = "com.bestswlkh0310.flay"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -28,12 +28,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     buildFeatures {
@@ -41,7 +41,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.1"
     }
 
     packagingOptions {
@@ -55,6 +55,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.45")
     kapt("com.google.dagger:hilt-android-compiler:2.45")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation ("androidx.glance:glance-appwidget:1.0.0-rc01")
+    implementation ("androidx.glance:glance-material:1.0.0-rc01")
+    implementation ("androidx.glance:glance-material3:1.0.0-rc01")
+
 
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
