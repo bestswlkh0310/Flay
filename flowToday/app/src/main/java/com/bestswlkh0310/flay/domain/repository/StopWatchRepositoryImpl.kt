@@ -1,5 +1,6 @@
 package com.bestswlkh0310.flay.domain.repository
 
+import android.util.Log
 import com.bestswlkh0310.flay.data.dao.StopWatchDao
 import com.bestswlkh0310.flay.data.entity.StopWatchEntity
 import com.bestswlkh0310.flay.data.repository.StopWatchRepository
@@ -19,5 +20,10 @@ class StopWatchRepositoryImpl @Inject constructor(
 
     override suspend fun updateStopWatch(stopWatchDto: StopWatchDto) {
         stopWatchDao.update(stopWatchDto.toEntity())
+    }
+
+    override suspend fun deleteStopWatch(stopWatchDto: StopWatchDto) {
+        Log.d("TAG", "$stopWatchDto - deleteStopWatch() called")
+        stopWatchDao.delete(stopWatchDto.toEntity())
     }
 }

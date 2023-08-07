@@ -8,4 +8,5 @@ interface StopWatchRepository {
     suspend fun addStopWatch(stopWatchEntity: StopWatchEntity)
     suspend fun getStopWatchList(): List<StopWatchDto>
     suspend fun updateStopWatch(stopWatchDto: StopWatchDto)
+    suspend fun deleteStopWatch(stopWatchDto: StopWatchDto)
 }

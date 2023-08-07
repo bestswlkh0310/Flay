@@ -3,10 +3,12 @@ package com.bestswlkh0310.flay.presentation.ui
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,7 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.bestswlkh0310.flay.presentation.ui.component.FlayBottomButton
+import com.bestswlkh0310.flay.presentation.ui.component.FlayButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayText
 import com.bestswlkh0310.flay.presentation.ui.component.FlayBottomNavigation
 
@@ -43,7 +45,7 @@ fun FlayBottomNavigation(
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             val selected = item.title == currentRoute
-            FlayBottomButton(
+            FlayButton(
                 onClick = {
                     navController.navigate(item.title) {
                         navController.graph.startDestinationRoute?.let {
@@ -56,13 +58,14 @@ fun FlayBottomNavigation(
             ) {
                 Column (
                     modifier = Modifier
-                        .height(38.dp)
-                        .width(60.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .wrapContentWidth()
+                        .height(30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     FlayText(item.title,
                         modifier = Modifier
-                            .height(34.dp))
+                            .height(26.dp))
                     val transition = updateTransition(targetState = selected, label = "dividerAnimation")
                     val animatedOpacity by transition.animateFloat(
                         transitionSpec = { tween(durationMillis = 500) },

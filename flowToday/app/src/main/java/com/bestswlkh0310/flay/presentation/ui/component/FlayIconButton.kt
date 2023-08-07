@@ -26,7 +26,7 @@ fun FlayIconButton(
     onClick: () -> Unit
 ) {
     Box {
-        FlayBottomButton(
+        FlayButton(
             onClick = onClick,
             modifier = modifier
                 .size(size.times(2))

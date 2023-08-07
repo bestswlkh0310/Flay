@@ -45,4 +45,10 @@ object TimeCalculator {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return LocalDateTime.parse(dateTimeString, formatter)
     }
+
+    fun isTimeOver(timeDto: TimeDto): Boolean {
+        with(timeDto) {
+            return totalDay < 0 || year < 0 || day < 0 || month < 0 || day < 0 || minute < 0 || second < 0
+        }
+    }
 }

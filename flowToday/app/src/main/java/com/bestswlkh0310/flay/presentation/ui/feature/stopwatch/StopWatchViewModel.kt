@@ -6,13 +6,14 @@ import com.bestswlkh0310.flay.data.entity.StopWatchEntity
 import com.bestswlkh0310.flay.data.repository.StopWatchRepository
 import com.bestswlkh0310.flay.domain.model.StopWatchDto
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.localDateTimeToString
+import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.stringToLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-data class AddStopWatchState(
+data class StopWatchState(
     val titleText: String = "",
     val deadline: LocalDateTime = LocalDateTime.now(),
     var stopWatchList: List<StopWatchDto> = arrayListOf(),
@@ -23,12 +24,23 @@ data class AddStopWatchState(
     )
 )
 
+sealed class SideEffect {
+    object WrongTitle: SideEffect()
+    object None: SideEffect()
+    object AddStopWatchComplete: SideEffect()
+    object EditStopWatchComplete: SideEffect()
+    object WrongDeadline: SideEffect()
+}
+
 @HiltViewModel
 class StopWatchViewModel @Inject constructor(
     private val stopWatchRepository: StopWatchRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow<AddStopWatchState>(AddStopWatchState())
+    private val _state = MutableStateFlow<StopWatchState>(StopWatchState())
     val state = _state
+
+    private val _sideEffect = MutableStateFlow<SideEffect>(SideEffect.None)
+    val sideEffect = _sideEffect
 
     fun updateAddStopWatchTitleText(it: String) {
         _state.value = _state.value.copy(titleText = it)
@@ -39,6 +51,14 @@ class StopWatchViewModel @Inject constructor(
     }
 
     fun addStopWatch() {
+        if (_state.value.titleText.isEmpty()) {
+            _sideEffect.value = SideEffect.WrongTitle
+            return
+        }
+        if (_state.value.deadline.isBefore(LocalDateTime.now())) {
+            _sideEffect.value = SideEffect.WrongDeadline
+            return
+        }
         viewModelScope.launch {
             stopWatchRepository.addStopWatch(
                 StopWatchEntity(
@@ -46,8 +66,14 @@ class StopWatchViewModel @Inject constructor(
                     deadline = localDateTimeToString(_state.value.deadline)
                 )
             )
+            _sideEffect.value = SideEffect.AddStopWatchComplete
+            removeAddStopWatch()
             loadStopWatchList()
         }
+    }
+
+    private fun removeAddStopWatch() {
+        _state.value = _state.value.copy(titleText = "")
     }
 
     fun loadStopWatchList() {
@@ -71,9 +97,29 @@ class StopWatchViewModel @Inject constructor(
     }
 
     fun updateStopWatchComplete() {
+        if (_state.value.clickedStopWatch.title.isEmpty()) {
+            _sideEffect.value = SideEffect.WrongTitle
+            return
+        }
+        if (stringToLocalDateTime(_state.value.clickedStopWatch.deadline).isBefore(LocalDateTime.now())) {
+            _sideEffect.value = SideEffect.WrongDeadline
+            return
+        }
         viewModelScope.launch {
             stopWatchRepository.updateStopWatch(_state.value.clickedStopWatch)
+            _sideEffect.value = SideEffect.EditStopWatchComplete
             loadStopWatchList()
         }
+    }
+
+    fun deleteStopWatch() {
+        viewModelScope.launch {
+            stopWatchRepository.deleteStopWatch(_state.value.clickedStopWatch)
+            loadStopWatchList()
+        }
+    }
+
+    fun noneEffect() {
+        _sideEffect.value = SideEffect.None
     }
 }

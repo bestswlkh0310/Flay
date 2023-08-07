@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FlayBottomButton(
+fun FlayButton(
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
     onClick: () -> Unit,
