@@ -16,4 +16,8 @@ class StopWatchRepositoryImpl @Inject constructor(
     override suspend fun getStopWatchList(): List<StopWatchDto> {
         return stopWatchDao.getAllStopWatch().map { it.toDto() }
     }
+
+    override suspend fun updateStopWatch(stopWatchDto: StopWatchDto) {
+        stopWatchDao.update(stopWatchDto.toEntity())
+    }
 }

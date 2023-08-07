@@ -162,7 +162,7 @@ object WheelPickerDefaults{
     fun selectorProperties(
         enabled: Boolean = true,
         shape: Shape = RoundedCornerShape(16.dp),
-        color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+        color: Color = Color.Transparent /*MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)*/,
         border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
     ): SelectorProperties = DefaultSelectorProperties(
         enabled = enabled,

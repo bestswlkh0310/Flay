@@ -7,11 +7,14 @@ import com.bestswlkh0310.flay.domain.model.StopWatchDto
 
 @Entity(tableName = Tables.STOP_WATCH)
 data class StopWatchEntity(
-    val title: String,
-    val deadline: String
-) {
+
     @PrimaryKey(autoGenerate = true)
-    var idx: Long = 0
+    var idx: Long = 0,
+
+    val title: String,
+
+    val deadline: String,
+) {
 
     fun toDto(): StopWatchDto {
         return StopWatchDto(

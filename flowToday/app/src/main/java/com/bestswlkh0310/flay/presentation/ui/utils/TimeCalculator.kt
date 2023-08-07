@@ -40,4 +40,9 @@ object TimeCalculator {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return localDateTime.format(formatter)
     }
+
+    fun stringToLocalDateTime(dateTimeString: String): LocalDateTime {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return LocalDateTime.parse(dateTimeString, formatter)
+    }
 }

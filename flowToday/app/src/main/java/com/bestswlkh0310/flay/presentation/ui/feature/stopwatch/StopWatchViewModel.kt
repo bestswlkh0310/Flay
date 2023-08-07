@@ -15,7 +15,12 @@ import javax.inject.Inject
 data class AddStopWatchState(
     val titleText: String = "",
     val deadline: LocalDateTime = LocalDateTime.now(),
-    var stopWatchList: List<StopWatchDto> = arrayListOf()
+    var stopWatchList: List<StopWatchDto> = arrayListOf(),
+    var clickedStopWatch: StopWatchDto = StopWatchDto(
+        0,
+        "..",
+        localDateTimeToString(LocalDateTime.now())
+    )
 )
 
 @HiltViewModel
@@ -25,11 +30,11 @@ class StopWatchViewModel @Inject constructor(
     private val _state = MutableStateFlow<AddStopWatchState>(AddStopWatchState())
     val state = _state
 
-    fun updateTitleText(it: String) {
+    fun updateAddStopWatchTitleText(it: String) {
         _state.value = _state.value.copy(titleText = it)
     }
 
-    fun updateDeadline(deadline: LocalDateTime) {
+    fun updateAddStopWatchDeadline(deadline: LocalDateTime) {
         _state.value = _state.value.copy(deadline = deadline)
     }
 
@@ -48,6 +53,27 @@ class StopWatchViewModel @Inject constructor(
     fun loadStopWatchList() {
         viewModelScope.launch {
             _state.value = _state.value.copy(stopWatchList = stopWatchRepository.getStopWatchList())
+        }
+    }
+
+    fun updateEditStopWatchTitleText(it: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(clickedStopWatch = _state.value.clickedStopWatch.copy(title = it))
+        }
+    }
+
+    fun updateClickedStopWatch(stopWatchDto: StopWatchDto) {
+        _state.value = _state.value.copy(clickedStopWatch = stopWatchDto)
+    }
+
+    fun updateEditStopWatchDeadline(deadline: LocalDateTime) {
+        _state.value = _state.value.copy(clickedStopWatch = _state.value.clickedStopWatch.copy(deadline = localDateTimeToString(deadline)))
+    }
+
+    fun updateStopWatchComplete() {
+        viewModelScope.launch {
+            stopWatchRepository.updateStopWatch(_state.value.clickedStopWatch)
+            loadStopWatchList()
         }
     }
 }

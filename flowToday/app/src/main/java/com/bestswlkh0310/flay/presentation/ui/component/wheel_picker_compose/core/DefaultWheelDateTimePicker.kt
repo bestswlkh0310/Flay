@@ -40,10 +40,10 @@ internal fun DefaultWheelDateTimePicker(
         if(selectorProperties.enabled().value){
             Surface(
                 modifier = Modifier
-                    .size(size.width, size.height / rowCount),
+                    .size(size.width + 20.dp, size.height / rowCount),
                 shape = selectorProperties.shape().value,
                 color = selectorProperties.color().value,
-                border = selectorProperties.border().value
+//                border = selectorProperties.border().value
             ) {}
         }
         Row {

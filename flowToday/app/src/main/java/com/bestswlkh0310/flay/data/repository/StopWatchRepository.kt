@@ -7,4 +7,5 @@ import com.bestswlkh0310.flay.domain.model.TimeDto
 interface StopWatchRepository {
     suspend fun addStopWatch(stopWatchEntity: StopWatchEntity)
     suspend fun getStopWatchList(): List<StopWatchDto>
+    suspend fun updateStopWatch(stopWatchDto: StopWatchDto)
 }

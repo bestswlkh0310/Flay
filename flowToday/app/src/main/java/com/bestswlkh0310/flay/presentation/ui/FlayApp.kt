@@ -2,10 +2,12 @@ package com.bestswlkh0310.flay.presentation.ui
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -53,7 +55,7 @@ fun FlayApp() {
                         .drawColoredShadow(Color.Black, 0.1f, 50.dp, 4.dp, 1.5.dp, 0.dp),
                     iconId = R.drawable.ic_up,
                     contentDescription = "up",
-                    containerColor = primary,
+                    containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary,
                     size = 29.dp
                 ) {
                     coroutineScope.launch {

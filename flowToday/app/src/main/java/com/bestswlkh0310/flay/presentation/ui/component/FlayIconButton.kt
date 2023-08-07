@@ -1,6 +1,7 @@
 package com.bestswlkh0310.flay.presentation.ui.component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -31,13 +32,11 @@ fun FlayIconButton(
                 .size(size.times(2))
                 .clip(CircleShape),
             containerColor = containerColor
-        ) {
-
-        }
+        ) {}
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = contentDescription,
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .size(size)
                 .offset(x = (size.div(2)), y = size.div(2))

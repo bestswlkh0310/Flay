@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,16 +28,18 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.bestswlkh0310.flay.presentation.ui.feature.stopwatch.StopWatchViewModel
 import com.bestswlkh0310.flay.presentation.ui.component.wheel_picker_compose.WheelDateTimePicker
+import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.stringToLocalDateTime
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddStopWatch(
+fun EditStopWatch(
     title: String,
     primaryButton: @Composable () -> Unit,
+    secondaryButton: @Composable (() -> Unit)? = null,
+    deleteButton: @Composable () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     description: String? = null,
-    secondaryButton: @Composable (() -> Unit)? = null,
     viewModel: StopWatchViewModel
 ) {
     Dialog(
@@ -83,8 +86,8 @@ fun AddStopWatch(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
-                    value = state.titleText,
-                    onChange = { viewModel.updateAddStopWatchTitleText(it) },
+                    value = state.clickedStopWatch.title,
+                    onChange = { viewModel.updateEditStopWatchTitleText(it) },
                     paddingHorizontal = 8.dp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -97,9 +100,10 @@ fun AddStopWatch(
                         size = DpSize(300.dp, 160.dp),
                         modifier = Modifier.fillMaxWidth(),
                         textColor = MaterialTheme.colorScheme.secondary,
+                        startDateTime = stringToLocalDateTime(state.clickedStopWatch.deadline),
                         textStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
                     ) {
-                        viewModel.updateAddStopWatchDeadline(it)
+                        viewModel.updateEditStopWatchDeadline(it)
                     }
                 }
 
@@ -107,6 +111,9 @@ fun AddStopWatch(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        deleteButton()
+                    }
                     secondaryButton?.let {
                         it()
                     }
