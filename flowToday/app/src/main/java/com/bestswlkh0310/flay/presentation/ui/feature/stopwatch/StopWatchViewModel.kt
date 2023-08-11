@@ -36,7 +36,7 @@ sealed class SideEffect {
 class StopWatchViewModel @Inject constructor(
     private val stopWatchRepository: StopWatchRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow<StopWatchState>(StopWatchState())
+    private val _state = MutableStateFlow(StopWatchState())
     val state = _state
 
     private val _sideEffect = MutableStateFlow<SideEffect>(SideEffect.None)

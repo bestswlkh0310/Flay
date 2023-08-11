@@ -41,15 +41,15 @@ class MainActivity : ComponentActivity() {
                         mGoogleSignInClient.signOut()
                     }
 
-                    if (account != null && isLkh) {
+//                    if (account != null && isLkh) {
                         FlayApp()
-                    } else {
-                        OnBoardScreen() { text, it ->
-                            isLkh = it
-                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-                            account = GoogleSignIn.getLastSignedInAccount(context)
-                        }
-                    }
+//                    } else {
+//                        OnBoardScreen() { text, it ->
+//                            isLkh = it
+//                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+//                            account = GoogleSignIn.getLastSignedInAccount(context)
+//                        }
+//                    }
                 }
             }
         }

@@ -27,7 +27,8 @@ import com.bestswlkh0310.flay.presentation.ui.component.FlayBottomNavigation
 @Composable
 fun FlayBottomNavigation(
     navController: NavHostController,
-    routeAction: FlayNavigationActions
+    routeAction: FlayNavigationActions,
+    currentRouteCallback: (String) -> Unit
 ) {
     val items = listOf(
         NAV_ROUTE.STOPWATCH,
@@ -43,6 +44,8 @@ fun FlayBottomNavigation(
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
+        currentRouteCallback(currentRoute?: "")
+
         items.forEach { item ->
             val selected = item.title == currentRoute
             FlayButton(

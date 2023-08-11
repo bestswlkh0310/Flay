@@ -36,7 +36,7 @@ fun FlayCheckBox(
                 onChange()
             }
             .background(
-                color = if (checked) MaterialTheme.colorScheme.secondary else Color.White,
+                color = if (checked) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
                 shape = shape
             )
             .border(
