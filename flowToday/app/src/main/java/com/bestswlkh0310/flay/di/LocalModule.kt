@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.bestswlkh0310.flay.data.Tables
 import com.bestswlkh0310.flay.data.dao.StopWatchDao
+import com.bestswlkh0310.flay.data.dao.TodoDao
 import com.bestswlkh0310.flay.data.database.FlayDatabase
 import dagger.Module
 import dagger.Provides
@@ -34,4 +35,10 @@ object LocalModule {
     fun provideStopWatchDao(
         flayDatabase: FlayDatabase
     ): StopWatchDao = flayDatabase.stopWatchDao()
+
+    @Provides
+    @Singleton
+    fun providesTodoDao(
+        flayDatabase: FlayDatabase
+    ): TodoDao = flayDatabase.todoDao()
 }

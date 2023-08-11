@@ -15,4 +15,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun provideStopWatchRepository(stopWatchRepositoryImpl: StopWatchRepositoryImpl): StopWatchRepository
+
+
 }
