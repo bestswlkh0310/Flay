@@ -27,7 +27,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.bestswlkh0310.flay.presentation.ui.component.wheel_picker_compose.WheelDateTimePicker
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FlayDialog(
     title: String,

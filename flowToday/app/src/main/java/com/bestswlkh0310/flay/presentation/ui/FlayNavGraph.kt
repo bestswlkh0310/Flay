@@ -12,15 +12,16 @@ import com.bestswlkh0310.flay.presentation.ui.feature.todo.TodoScreen
 fun NavigationGraph(
     navController: NavHostController,
     routeAction: FlayNavigationActions,
-    lazyListState: LazyListState
+    stopWatchLazyListState: LazyListState,
+    todoLazyListState: LazyListState
 ) {
-    NavHost(navController = navController, startDestination = NAV_ROUTE.STOPWATCH.title) {
+    NavHost(navController = navController, startDestination = NAV_ROUTE.TODO.title) {
         composable(NAV_ROUTE.STOPWATCH.title) {
-            StopWatchScreen(routeAction, lazyListState = lazyListState)
+            StopWatchScreen(routeAction, lazyListState = stopWatchLazyListState)
         }
 
         composable(NAV_ROUTE.TODO.title) {
-            TodoScreen()
+            TodoScreen(routeAction , todoLazyListState)
         }
     }
 }

@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.bestswlkh0310.flay.R
 import com.bestswlkh0310.flay.presentation.ui.component.FlayIconButton
 import com.bestswlkh0310.flay.presentation.ui.modifier.drawColoredShadow
-import com.bestswlkh0310.flay.presentation.ui.theme.primary
 import kotlinx.coroutines.launch
 
 
@@ -32,12 +31,13 @@ fun FlayApp() {
     val navController = rememberNavController()
     val routeAction = remember(navController) { FlayNavigationActions(navController) }
     val coroutineScope = rememberCoroutineScope()
-    val lazyListState = rememberLazyListState()
-    val isScrollDown by remember { derivedStateOf { lazyListState.firstVisibleItemIndex > 0 } }
+    val stopWatchLazyListState = rememberLazyListState()
+    val todoLazyListState = rememberLazyListState()
+    val isScrollDown by remember { derivedStateOf { stopWatchLazyListState.firstVisibleItemIndex > 0 } }
     val targetAlpha = if (isScrollDown) 1f else 0f
     val fabVisibleState = animateFloatAsState(
         targetValue = targetAlpha,
-        animationSpec = tween(500)
+        animationSpec = tween(500), label = ""
     )
 
     Scaffold(
@@ -59,7 +59,7 @@ fun FlayApp() {
                     size = 29.dp
                 ) {
                     coroutineScope.launch {
-                        lazyListState.animateScrollToItem(0)
+                        stopWatchLazyListState.animateScrollToItem(0)
                     }
                 }
             }
@@ -70,7 +70,8 @@ fun FlayApp() {
             NavigationGraph(
                 navController = navController,
                 routeAction = routeAction,
-                lazyListState = lazyListState
+                stopWatchLazyListState = stopWatchLazyListState,
+                todoLazyListState = todoLazyListState
             )
         }
     }
