@@ -5,22 +5,25 @@ import androidx.lifecycle.viewModelScope
 import com.bestswlkh0310.flay.data.entity.StopWatchEntity
 import com.bestswlkh0310.flay.data.repository.StopWatchRepository
 import com.bestswlkh0310.flay.domain.model.StopWatchDto
+import com.bestswlkh0310.flay.domain.model.TodoDto
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.localDateTimeToString
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.stringToLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class StopWatchState(
     val titleText: String = "",
     val deadline: LocalDateTime = LocalDateTime.now(),
-    var stopWatchList: List<StopWatchDto> = arrayListOf(),
+    var stopWatchList: List<StopWatchDto?> = arrayListOf(),
     var clickedStopWatch: StopWatchDto = StopWatchDto(
         0,
         "..",
-        localDateTimeToString(LocalDateTime.now())
+        localDateTimeToString(LocalDateTime.now()),
+        0
     )
 )
 
@@ -63,7 +66,8 @@ class StopWatchViewModel @Inject constructor(
             stopWatchRepository.addStopWatch(
                 StopWatchEntity(
                     title = _state.value.titleText,
-                    deadline = localDateTimeToString(_state.value.deadline)
+                    deadline = localDateTimeToString(_state.value.deadline),
+                    position = _state.value.stopWatchList.size
                 )
             )
             _sideEffect.value = SideEffect.AddStopWatchComplete
@@ -78,7 +82,9 @@ class StopWatchViewModel @Inject constructor(
 
     fun loadStopWatchList() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(stopWatchList = stopWatchRepository.getStopWatchList())
+            val addList = arrayListOf<StopWatchDto?>(null)
+            addList.addAll(stopWatchRepository.getStopWatchList().sortedBy { it.position })
+            _state.value = _state.value.copy(stopWatchList = addList)
         }
     }
 
@@ -115,6 +121,20 @@ class StopWatchViewModel @Inject constructor(
     fun deleteStopWatch() {
         viewModelScope.launch {
             stopWatchRepository.deleteStopWatch(_state.value.clickedStopWatch)
+            loadStopWatchList()
+        }
+    }
+
+    fun replaceStopWatch(fromPos: Int, toPos: Int) {
+
+        viewModelScope.launch {
+            val stopWatchList = _state.value.stopWatchList
+
+            val fromDto = stopWatchList[fromPos]
+            val toDto = stopWatchList[toPos]
+
+            stopWatchRepository.updateStopWatch(fromDto!!.copy(position = toPos))
+            stopWatchRepository.updateStopWatch(toDto!!.copy(position = fromPos))
             loadStopWatchList()
         }
     }

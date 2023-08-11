@@ -14,13 +14,15 @@ data class StopWatchEntity(
     val title: String,
 
     val deadline: String,
-) {
 
+    val position: Int
+) {
     fun toDto(): StopWatchDto {
         return StopWatchDto(
             idx = idx,
             title = title,
-            deadline = deadline
+            deadline = deadline,
+            position = position
         )
     }
 }

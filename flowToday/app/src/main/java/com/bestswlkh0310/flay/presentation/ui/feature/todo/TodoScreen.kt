@@ -24,9 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +33,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bestswlkh0310.flay.R
-import com.bestswlkh0310.flay.domain.model.TodoDto
 import com.bestswlkh0310.flay.presentation.ui.FlayNavigationActions
 import com.bestswlkh0310.flay.presentation.ui.component.FlayButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayCheckBox
@@ -55,7 +51,6 @@ import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
-import java.time.LocalDate
 
 @Composable
 fun TodoScreen(
@@ -63,10 +58,10 @@ fun TodoScreen(
     lazyListState: LazyListState,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    val effect by viewModel.sideEffect.collectAsState()
+    val value by viewModel.state.collectAsState()
+    val state by viewModel.sideEffect.collectAsState()
 
-    when (effect) {
+    when (state) {
         SideEffect.WrongTodo -> Toast.makeText(LocalContext.current, "할 일을 제대로 입력해 주세요", Toast.LENGTH_SHORT).show()
         SideEffect.AddTodoComplete -> {
 //            LocalView.current.clearFocus()
@@ -75,23 +70,7 @@ fun TodoScreen(
     }
 
     val focusRequester = remember { FocusRequester() }
-    var data = state.todoList
-    /*var data by remember { mutableStateOf(arrayListOf(
-        null,
-        TodoDto(1, "1", LocalDate.now(), false),
-        TodoDto(2, "2", LocalDate.now(), false),
-        TodoDto(3, "3", LocalDate.now(), false),
-        TodoDto(4, "4", LocalDate.now(), false),
-        TodoDto(5, "5", LocalDate.now(), false),
-        TodoDto(6, "6", LocalDate.now(), false),
-        TodoDto(7, "7", LocalDate.now(), false),
-        TodoDto(8, "8", LocalDate.now(), false),
-        TodoDto(9, "9", LocalDate.now(), false),
-        TodoDto(10, "10", LocalDate.now(), false),
-        TodoDto(11, "11", LocalDate.now(), false),
-        TodoDto(12, "12", LocalDate.now(), false),
-        TodoDto(13, "13", LocalDate.now(), false),
-    )) }*/
+    var data = value.todayTodoList
 
     val reorderableLazyListState = rememberReorderableLazyListState(
         onMove = { from, to ->
@@ -127,11 +106,11 @@ fun TodoScreen(
                         .offset(x = (-20).dp)
                 ) {
                     FlayIconButton(
-                        iconId = R.drawable.ic_add,
-                        contentDescription = "add",
+                        iconId = R.drawable.ic_graph,
+                        contentDescription = "graph",
                         onClick = {
-
-                        }
+                        },
+                        size = 22.dp
                     )
                 }
             } else {
@@ -204,7 +183,7 @@ fun TodoScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
-                        value = state.todo,
+                        value = value.todo,
                         onChange = {viewModel.updateTodo(it)},
                         paddingHorizontal = 0.dp,
                         paddingVertical = 0.dp

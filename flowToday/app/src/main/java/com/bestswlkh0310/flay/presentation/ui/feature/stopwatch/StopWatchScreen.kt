@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,6 +47,10 @@ import com.bestswlkh0310.flay.presentation.ui.theme.FlayTheme
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.calculateRemainingTime
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.isTimeOver
 import kotlinx.coroutines.delay
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 @Composable
 fun StopWatchScreen(
@@ -59,6 +64,17 @@ fun StopWatchScreen(
 
     val value by viewModel.state.collectAsState()
     val state by viewModel.sideEffect.collectAsState()
+
+    var data = value.stopWatchList
+
+    val reorderableLazyListState = rememberReorderableLazyListState(
+        onMove = { from, to ->
+            viewModel.replaceStopWatch(from.index, to.index)
+            Log.d("TAG", "$from -> $to - TodoScreen() called")
+        },
+        canDragOver = { draggedOver, dragging -> draggedOver.index > 0 && dragging.index > 0 },
+        listState = lazyListState
+    )
 
     when (state) {
         SideEffect.WrongTitle -> Toast.makeText(LocalContext.current, "제목을 제대로 입력해 주세요", Toast.LENGTH_SHORT).show()
@@ -138,81 +154,88 @@ fun StopWatchScreen(
 
     FlayLazyColumn(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .reorderable(reorderableLazyListState)
+            .detectReorderAfterLongPress(reorderableLazyListState),
         horizontalAlignment = Alignment.CenterHorizontally,
         lazyListState = lazyListState
         ) {
-        item { FlayTitle(text = "스톱워치") }
-        item {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(x = (-20).dp)
-            ) {
-                FlayIconButton(
-                    iconId = R.drawable.ic_add,
-                    contentDescription = "add",
-                    onClick = {
-                        showAddStopWatchDialog = true
-                    }
-                )
-            }
-        }
-
-        items(value.stopWatchList, key = { it.idx }) {
-            FlayLazyColumnItem(
-                onClick = {
-                    showEditStopWatchDialog = true
-                    viewModel.updateClickedStopWatch(it)
+        items(data, key = { it?.idx?: -1 }) {
+            if (it == null) {
+                Spacer(modifier = Modifier.height(80.dp))
+                ReorderableItem(reorderableState = reorderableLazyListState, key = null) {
+                    FlayTitle(text = "스톱워치")
                 }
-            ) {
-                Column(
+                Row(
+                    horizontalArrangement = Arrangement.End,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
+                        .offset(x = (-20).dp)
                 ) {
-                    FlayText(
-                        text = it.title,
-                        modifier = Modifier
-                            .padding(top = 35.dp, start = 13.dp)
-                            .height(30.dp),
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                    Row(
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier
-                            .padding(start = 13.dp, bottom = 13.dp)
-                    ) {
-                        var deadline by remember { mutableStateOf(calculateRemainingTime(it.deadline)) }
-                        LaunchedEffect(calculateRemainingTime(it.deadline)) {
-                            while (true) {
-                                delay(1000)
-                                deadline = calculateRemainingTime(it.deadline)
-//                            Log.d("TAG", "${it.deadline} - StopWatch() called")
-                            }
+                    FlayIconButton(
+                        iconId = R.drawable.ic_add,
+                        contentDescription = "add",
+                        onClick = {
+                            showAddStopWatchDialog = true
                         }
+                    )
+                }
+            } else {
+                ReorderableItem(reorderableState = reorderableLazyListState, key = it) { isDragging ->
+                    FlayLazyColumnItem(
+                        onClick = {
+                            showEditStopWatchDialog = true
+                            viewModel.updateClickedStopWatch(it)
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        ) {
+                            FlayText(
+                                text = it.title,
+                                modifier = Modifier
+                                    .padding(top = 35.dp, start = 13.dp)
+                                    .height(30.dp),
+                                color = MaterialTheme.colorScheme.onSecondary
+                            )
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                modifier = Modifier
+                                    .padding(start = 13.dp, bottom = 13.dp)
+                            ) {
+                                var deadline by remember { mutableStateOf(calculateRemainingTime(it.deadline)) }
+                                LaunchedEffect(calculateRemainingTime(it.deadline)) {
+                                    while (true) {
+                                        delay(1000)
+                                        deadline = calculateRemainingTime(it.deadline)
+//                            Log.d("TAG", "${it.deadline} - StopWatch() called")
+                                    }
+                                }
 
-                        if (isTimeOver(deadline)) {
-                            FlayText(text = "끝났어요", fontSize = 24.sp)
-                        } else {
-                            val year = deadline.year
-                            val month = deadline.month
-                            val modifier = Modifier.padding(bottom = 3.dp, end = 4.dp)
-                            if (year > 0) {
-                                FlayText(text = year.toString(), fontSize = 24.sp)
-                                FlayText(text = "년", modifier = modifier)
+                                if (isTimeOver(deadline)) {
+                                    FlayText(text = "끝났어요", fontSize = 24.sp)
+                                } else {
+                                    val year = deadline.year
+                                    val month = deadline.month
+                                    val modifier = Modifier.padding(bottom = 3.dp, end = 4.dp)
+                                    if (year > 0) {
+                                        FlayText(text = year.toString(), fontSize = 24.sp)
+                                        FlayText(text = "년", modifier = modifier)
+                                    }
+                                    if (month > 0) {
+                                        FlayText(text = month.toString(), fontSize = 24.sp)
+                                        FlayText(text = "월", modifier = modifier)
+                                    }
+                                    if (deadline.day > 0) {
+                                        FlayText(text = deadline.day.toString(), fontSize = 24.sp)
+                                        FlayText(text = "일", modifier = modifier)
+                                    }
+                                    val text = "%02d:%02d:%02d".format(deadline.hour, deadline.minute, deadline.second)
+                                    FlayText(text = text, fontSize = 24.sp)
+                                }
                             }
-                            if (month > 0) {
-                                FlayText(text = month.toString(), fontSize = 24.sp)
-                                FlayText(text = "월", modifier = modifier)
-                            }
-                            if (deadline.day > 0) {
-                                FlayText(text = deadline.day.toString(), fontSize = 24.sp)
-                                FlayText(text = "일", modifier = modifier)
-                            }
-                            val text = "%02d:%02d:%02d".format(deadline.hour, deadline.minute, deadline.second)
-                            FlayText(text = text, fontSize = 24.sp)
                         }
                     }
                 }

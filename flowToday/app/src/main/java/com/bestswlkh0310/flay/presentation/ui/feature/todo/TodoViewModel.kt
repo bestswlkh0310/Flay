@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 data class TodoState(
     val todo: String = "",
-    val todoList: List<TodoDto?> = arrayListOf()
+    val todayTodoList: List<TodoDto?> = arrayListOf()
 )
 
 sealed class SideEffect {
@@ -46,8 +46,8 @@ class TodoViewModel @Inject constructor(
         Log.d("TAG", "TodoViewModel - loadTodoList() called")
         viewModelScope.launch {
             val addList = arrayListOf<TodoDto?>(null)
-            addList.addAll(todoRepository.getTodoList().sortedBy { it.position })
-            _state.value = getState().copy(todoList = addList)
+            addList.addAll(todoRepository.getTodoByLocalDate(LocalDate.now()).sortedBy { it.position })
+            _state.value = getState().copy(todayTodoList = addList)
         }
     }
 
@@ -62,9 +62,9 @@ class TodoViewModel @Inject constructor(
                 TodoDto(
                     idx = 0,
                     todo = _state.value.todo,
-                    createdTime = LocalDate.now(),
+                    createdTime = LocalDate.now().plusDays(1),
                     isDone = false,
-                    position = _state.value.todoList.size
+                    position = _state.value.todayTodoList.size
                 )
             )
             _sideEffect.value = SideEffect.AddTodoComplete
@@ -82,7 +82,7 @@ class TodoViewModel @Inject constructor(
 
     fun replaceTodo(fromPos: Int, toPos: Int) {
         viewModelScope.launch {
-            val todoList = _state.value.todoList
+            val todoList = _state.value.todayTodoList
 
             val fromDto = todoList[fromPos]
             val toDto = todoList[toPos]

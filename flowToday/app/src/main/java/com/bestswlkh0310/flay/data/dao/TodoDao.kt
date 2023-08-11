@@ -18,5 +18,4 @@ interface TodoDao : BaseDao<TodoEntity> {
 
     @Query("SELECT * FROM ${Tables.TODO} WHERE createdTime = :localDate")
     suspend fun getTodoByLocalDate(localDate: LocalDate): List<TodoEntity>
-
 }
