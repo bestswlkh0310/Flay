@@ -14,7 +14,7 @@ import com.bestswlkh0310.flay.data.utils.FlayTypeConverter
         StopWatchEntity::class,
         TodoEntity::class
     ],
-    version = 10,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(FlayTypeConverter::class)

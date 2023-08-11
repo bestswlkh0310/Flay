@@ -1,6 +1,7 @@
 package com.bestswlkh0310.flay.presentation.ui.feature.todo
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,17 +16,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +34,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bestswlkh0310.flay.R
 import com.bestswlkh0310.flay.domain.model.TodoDto
@@ -49,7 +51,6 @@ import com.bestswlkh0310.flay.presentation.ui.component.FlayText
 import com.bestswlkh0310.flay.presentation.ui.component.FlayTextField
 import com.bestswlkh0310.flay.presentation.ui.component.FlayTitle
 import com.bestswlkh0310.flay.presentation.ui.modifier.drawColoredShadow
-import com.bestswlkh0310.flay.presentation.ui.modifier.flayClickable
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -60,15 +61,22 @@ import java.time.LocalDate
 fun TodoScreen(
     routeAction: FlayNavigationActions? = null,
     lazyListState: LazyListState,
-    todoViewModel: TodoViewModel = hiltViewModel()
+    viewModel: TodoViewModel = hiltViewModel()
 ) {
-    val state = todoViewModel.state.collectAsState().value
+    val state by viewModel.state.collectAsState()
+    val effect by viewModel.sideEffect.collectAsState()
 
-    val effect = todoViewModel.sideEffect.collectAsState().value
     when (effect) {
+        SideEffect.WrongTodo -> Toast.makeText(LocalContext.current, "할 일을 제대로 입력해 주세요", Toast.LENGTH_SHORT).show()
+        SideEffect.AddTodoComplete -> {
+//            LocalView.current.clearFocus()
+        }
         else -> {}
     }
-    val items = arrayListOf(
+
+    val focusRequester = remember { FocusRequester() }
+    var data = state.todoList
+    /*var data by remember { mutableStateOf(arrayListOf(
         null,
         TodoDto(1, "1", LocalDate.now(), false),
         TodoDto(2, "2", LocalDate.now(), false),
@@ -83,18 +91,21 @@ fun TodoScreen(
         TodoDto(11, "11", LocalDate.now(), false),
         TodoDto(12, "12", LocalDate.now(), false),
         TodoDto(13, "13", LocalDate.now(), false),
-    )
+    )) }*/
 
-    val data = remember { mutableStateOf(items) }
     val reorderableLazyListState = rememberReorderableLazyListState(
         onMove = { from, to ->
-            val updatedData = ArrayList(data.value) // 새로운 ArrayList 생성
-            updatedData.add(to.index, updatedData.removeAt(from.index))
-            data.value = updatedData
+            viewModel.replaceTodo(from.index, to.index)
+            Log.d("TAG", "$from -> $to - TodoScreen() called")
         },
         canDragOver = { draggedOver, dragging -> draggedOver.index > 0 && dragging.index > 0 },
         listState = lazyListState
     )
+
+    LaunchedEffect(true) {
+        viewModel.loadTodoList()
+    }
+
     FlayLazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -102,7 +113,8 @@ fun TodoScreen(
             .detectReorderAfterLongPress(reorderableLazyListState),
         lazyListState = reorderableLazyListState.listState,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        items(data.value, { it?.idx ?: -1 }) { item ->
+        items(data, { it?.idx ?: -1 }) { item ->
+            Log.d("TAG", "11 ${item} - TodoScreen() called")
             if (item == null) {
                 Spacer(modifier = Modifier.height(80.dp))
                 ReorderableItem(reorderableState = reorderableLazyListState, key = null) {
@@ -125,7 +137,9 @@ fun TodoScreen(
             } else {
                 ReorderableItem(reorderableState = reorderableLazyListState, key = item) { isDragging ->
                     val elevation = animateDpAsState(if (isDragging) 100.dp else 0.dp, label = "")
-                    FlayLazyColumnItem(modifier = Modifier.shadow(elevation.value)) {
+                    FlayLazyColumnItem(
+                        modifier = Modifier.shadow(elevation.value)
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -134,9 +148,9 @@ fun TodoScreen(
                         ) {
                             Spacer(modifier = Modifier.width(7.dp))
                             FlayCheckBox(
-                                checked = false
+                                checked = item.isDone
                             ) {
-
+                                viewModel.updateTodoCheck(item)
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             FlayText(
@@ -188,16 +202,17 @@ fun TodoScreen(
                 ) {
                     FlayTextField(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
                         value = state.todo,
-                        onChange = {todoViewModel.updateTodo(it)},
+                        onChange = {viewModel.updateTodo(it)},
                         paddingHorizontal = 0.dp,
                         paddingVertical = 0.dp
                     )
                 }
                 FlayButton(
                     onClick = {
-                        Log.d("TAG", " - TodoScreen() called")
+                        viewModel.addTodo()
                     }
                 ) {
                     FlayText(

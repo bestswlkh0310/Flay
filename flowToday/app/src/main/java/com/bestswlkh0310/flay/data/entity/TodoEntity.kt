@@ -16,7 +16,9 @@ data class TodoEntity(
 
     var createdTime: LocalDate,
 
-    var isDone: Boolean
+    var isDone: Boolean,
+
+    var position: Int
 ) {
 
     fun toDto(): TodoDto {
@@ -24,7 +26,8 @@ data class TodoEntity(
             idx = idx,
             todo = todo,
             createdTime = createdTime,
-            isDone = isDone
+            isDone = isDone,
+            position = position
         )
     }
 }
