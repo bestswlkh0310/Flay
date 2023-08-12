@@ -23,6 +23,7 @@ fun FlayIconButton(
     contentDescription: String,
     containerColor: Color = Color.Transparent,
     size: Dp = 20.dp,
+    alpha: Float = 1.0f,
     onClick: () -> Unit
 ) {
     Box {
@@ -36,7 +37,7 @@ fun FlayIconButton(
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = contentDescription,
-            tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+            tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary.copy(alpha = alpha) else MaterialTheme.colorScheme.secondary.copy(alpha = alpha),
             modifier = Modifier
                 .size(size)
                 .offset(x = (size.div(2)), y = size.div(2))
