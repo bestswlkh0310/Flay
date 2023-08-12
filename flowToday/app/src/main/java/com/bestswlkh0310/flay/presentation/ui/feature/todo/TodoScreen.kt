@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bestswlkh0310.flay.R
@@ -140,7 +141,8 @@ fun TodoScreen(
                             FlayText(
                                 modifier = Modifier,
                                 text = item.todo,
-                                color = MaterialTheme.colorScheme.secondary
+                                color = MaterialTheme.colorScheme.secondary,
+                                textDecoration = if (item.isDone) TextDecoration.LineThrough else TextDecoration.None
                             )
                         }
                     }
@@ -148,6 +150,8 @@ fun TodoScreen(
             }
         }
     }
+
+    // bottom bar
     Box(
         modifier = Modifier
             .fillMaxSize()

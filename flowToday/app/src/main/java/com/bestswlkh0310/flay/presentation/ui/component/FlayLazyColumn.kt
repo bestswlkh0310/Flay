@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,8 +16,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FlayLazyColumn(
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState,
-    horizontalAlignment: Alignment.Horizontal,
+    lazyListState: LazyListState = rememberLazyListState(),
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: LazyListScope.() -> Unit
 ) {
     LazyColumn(

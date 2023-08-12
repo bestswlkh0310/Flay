@@ -39,17 +39,17 @@ import kotlinx.coroutines.delay
 @Composable
 fun FlayLazyColumnItem(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(15.dp),
-        modifier = Modifier
+        modifier = modifier
             .wrapContentHeight()
             .drawColoredShadow(Color.Black, 0.04f, 15.dp, 4.dp, 1.5.dp, 0.0.dp)
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .background(
                     if (isSystemInDarkTheme()) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
                 )
@@ -61,10 +61,9 @@ fun FlayLazyColumnItem(
                         (MaterialTheme.colorScheme.background),
                         MaterialTheme.colorScheme.secondary,
                         0.2f
-                    )
-                ) {
-                    onClick()
-                }
+                    ),
+                    onClick = onClick
+                )
                 .padding(horizontal = 9.dp)
         ) {
             content()

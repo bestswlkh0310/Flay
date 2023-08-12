@@ -10,6 +10,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.bestswlkh0310.flay.presentation.ui.theme.noToSansKr
@@ -20,7 +21,9 @@ fun FlayText(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondary,
     fontSize: TextUnit = 15.sp,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    textDecoration: TextDecoration = TextDecoration.None
+
 ) {
     Text(
         text = text,
@@ -34,6 +37,7 @@ fun FlayText(
                 includeFontPadding = false
             ),
             textAlign = textAlign
-        )
+        ),
+        textDecoration = textDecoration
     )
 }
