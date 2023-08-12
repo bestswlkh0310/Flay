@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,7 +55,7 @@ import org.burnoutcrew.reorderable.reorderable
 
 @Composable
 fun TodoScreen(
-    routeAction: FlayNavigationActions? = null,
+    routeAction: FlayNavigationActions,
     lazyListState: LazyListState,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
@@ -71,6 +72,8 @@ fun TodoScreen(
 
     val focusRequester = remember { FocusRequester() }
     var data = value.todayTodoList
+
+    Log.d("TAG", "$data - TodoScreen() called")
 
     val reorderableLazyListState = rememberReorderableLazyListState(
         onMove = { from, to ->
@@ -109,6 +112,8 @@ fun TodoScreen(
                         iconId = R.drawable.ic_graph,
                         contentDescription = "graph",
                         onClick = {
+                            Log.d("TAG", "asd - TodoScreen() called")
+                            routeAction.toGraph.invoke()
                         },
                         size = 22.dp
                     )

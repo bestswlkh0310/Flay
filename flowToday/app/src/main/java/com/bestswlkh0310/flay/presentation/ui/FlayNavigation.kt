@@ -2,23 +2,24 @@ package com.bestswlkh0310.flay.presentation.ui
 
 import androidx.navigation.NavHostController
 
-enum class NAV_ROUTE(
-    val title: String,
-    val isSingleTon: Boolean,
+enum class NavGraph(
+    val title: String
 ) {
-    STOPWATCH("스톱워치",  true),
-    TODO("할 일",  true)
+    HOME("홈"),
+    STOPWATCH("스톱워치"),
+    TODO("할 일"),
+    GRAPH("통계")
 }
 
 
-class FlayNavigationActions(navHostController: NavHostController) {/*
-    val navTo: (NAV_ROUTE) -> Unit = {
-        navHostController.navigate(it.title) {
-            launchSingleTop = it.isSingleTon
-        }
+class FlayNavigationActions(
+    navHostController: NavHostController
+) {
+    val toGraph: () -> Unit = {
+        navHostController.navigate(NavGraph.GRAPH.title)
     }
 
-    val goBack: () -> Unit = {
+    val toBack: () -> Unit = {
         navHostController.navigateUp()
-    }*/
+    }
 }

@@ -43,7 +43,6 @@ class TodoViewModel @Inject constructor(
     private fun getState() = _state.value
 
     fun loadTodoList() {
-        Log.d("TAG", "TodoViewModel - loadTodoList() called")
         viewModelScope.launch {
             val addList = arrayListOf<TodoDto?>(null)
             addList.addAll(todoRepository.getTodoByLocalDate(LocalDate.now()).sortedBy { it.position })
@@ -62,7 +61,7 @@ class TodoViewModel @Inject constructor(
                 TodoDto(
                     idx = 0,
                     todo = _state.value.todo,
-                    createdTime = LocalDate.now().plusDays(1),
+                    createdTime = LocalDate.now(),
                     isDone = false,
                     position = _state.value.todayTodoList.size
                 )
@@ -92,7 +91,6 @@ class TodoViewModel @Inject constructor(
             loadTodoList()
         }
     }
-
 
     private fun removeAddTodo() {
         _state.value = _state.value.copy(todo = "")

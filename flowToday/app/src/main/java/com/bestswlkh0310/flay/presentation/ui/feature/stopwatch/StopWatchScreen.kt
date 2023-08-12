@@ -54,7 +54,6 @@ import org.burnoutcrew.reorderable.reorderable
 
 @Composable
 fun StopWatchScreen(
-    routeAction: FlayNavigationActions? = null,
     lazyListState: LazyListState,
     viewModel: StopWatchViewModel = hiltViewModel()
 ) {
@@ -65,7 +64,7 @@ fun StopWatchScreen(
     val value by viewModel.state.collectAsState()
     val state by viewModel.sideEffect.collectAsState()
 
-    var data = value.stopWatchList
+    val data = value.stopWatchList
 
     val reorderableLazyListState = rememberReorderableLazyListState(
         onMove = { from, to ->

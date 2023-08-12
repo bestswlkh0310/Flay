@@ -18,21 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.bestswlkh0310.flay.presentation.ui.component.FlayButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayText
 import com.bestswlkh0310.flay.presentation.ui.component.FlayBottomNavigation
 
 @Composable
 fun FlayBottomNavigation(
-    navController: NavHostController,
-    routeAction: FlayNavigationActions,
-    currentRouteCallback: (String) -> Unit
+    selectedTab: String,
+    selectedTabCallback: (String) -> Unit
 ) {
     val items = listOf(
-        NAV_ROUTE.STOPWATCH,
-        NAV_ROUTE.TODO,
+        NavGraph.STOPWATCH,
+        NavGraph.TODO,
     )
 
     FlayBottomNavigation(
@@ -42,21 +39,18 @@ fun FlayBottomNavigation(
             .padding(horizontal = 30.dp)
             .padding(bottom = 4.dp)
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        currentRouteCallback(currentRoute?: "")
-
         items.forEach { item ->
-            val selected = item.title == currentRoute
+            val selected = item.title == selectedTab
+            val transition = updateTransition(targetState = selected, label = "dividerAnimation")
+            val animatedOpacity by transition.animateFloat(
+                transitionSpec = { tween(durationMillis = 500) },
+                label = "opacity"
+            ) {
+                if (it) 1f else 0f
+            }
             FlayButton(
                 onClick = {
-                    navController.navigate(item.title) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) { saveState = true }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    selectedTabCallback(item.title)
                 }
             ) {
                 Column (
@@ -66,30 +60,30 @@ fun FlayBottomNavigation(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    FlayText(item.title,
+                    FlayText(
+                        text = item.title,
                         modifier = Modifier
-                            .height(26.dp))
-                    val transition = updateTransition(targetState = selected, label = "dividerAnimation")
-                    val animatedOpacity by transition.animateFloat(
-                        transitionSpec = { tween(durationMillis = 500) },
-                        label = "opacity"
-                    ) {
-                        if (it) 1f else 0f
-                    }
-                    if (item.title == currentRoute) {
-                        Divider(
-                            color = MaterialTheme.colorScheme.secondary,
-                            thickness = 2.dp,
-                            modifier = Modifier
-                                .width((item.title.length * 10).dp)
-                                .padding(top = 2.dp)
-                                .graphicsLayer(
-                                    alpha = animatedOpacity,
-                                )
-                        )
+                            .height(26.dp)
+                    )
+                    if (item.title == selectedTab) {
+                        BottomDivider(item = item, animatedOpacity = animatedOpacity)
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun BottomDivider(item: NavGraph, animatedOpacity: Float) {
+    Divider(
+        color = MaterialTheme.colorScheme.secondary,
+        thickness = 2.dp,
+        modifier = Modifier
+            .width((item.title.length * 10).dp)
+            .padding(top = 2.dp)
+            .graphicsLayer(
+                alpha = animatedOpacity,
+            )
+    )
 }

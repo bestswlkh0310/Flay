@@ -2,26 +2,37 @@ package com.bestswlkh0310.flay.presentation.ui
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bestswlkh0310.flay.presentation.ui.feature.stopwatch.StopWatchScreen
-import com.bestswlkh0310.flay.presentation.ui.feature.todo.TodoScreen
+import androidx.navigation.compose.rememberNavController
+import com.bestswlkh0310.flay.presentation.ui.feature.graph.GraphScreen
+import com.bestswlkh0310.flay.presentation.ui.feature.home.HomeScreen
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController,
-    routeAction: FlayNavigationActions,
     stopWatchLazyListState: LazyListState,
     todoLazyListState: LazyListState
 ) {
-    NavHost(navController = navController, startDestination = NAV_ROUTE.TODO.title) {
-        composable(NAV_ROUTE.STOPWATCH.title) {
-            StopWatchScreen(routeAction, lazyListState = stopWatchLazyListState)
+    val navController = rememberNavController()
+    val routeAction = remember(navController) { FlayNavigationActions(navController) }
+
+    NavHost(
+        navController = navController,
+        startDestination = NavGraph.HOME.title
+    ) {
+        composable(NavGraph.HOME.title) {
+            HomeScreen(
+                routeAction = routeAction,
+                stopWatchLazyListState = stopWatchLazyListState,
+                todoLazyListState = todoLazyListState
+            )
         }
 
-        composable(NAV_ROUTE.TODO.title) {
-            TodoScreen(routeAction , todoLazyListState)
+        composable(NavGraph.GRAPH.title) {
+            GraphScreen(
+                routeAction = routeAction
+            )
         }
     }
 }
