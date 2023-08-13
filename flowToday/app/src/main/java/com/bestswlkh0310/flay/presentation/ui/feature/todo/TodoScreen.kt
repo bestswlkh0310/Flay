@@ -97,7 +97,7 @@ fun TodoScreen(
         lazyListState = reorderableLazyListState.listState,
         horizontalAlignment = Alignment.CenterHorizontally) {
         items(data, { it?.idx ?: -1 }) { item ->
-            Log.d("TAG", "11 ${item} - TodoScreen() called")
+            Log.d("TAG", "11 $item - TodoScreen() called")
             if (item == null) {
                 Spacer(modifier = Modifier.height(80.dp))
                 ReorderableItem(reorderableState = reorderableLazyListState, key = null) {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,15 +38,6 @@ import com.bestswlkh0310.flay.presentation.ui.component.FlayLazyColumnItem
 import com.bestswlkh0310.flay.presentation.ui.component.FlayText
 import com.bestswlkh0310.flay.presentation.ui.component.FlayTopBar
 import java.time.LocalDate
-
-val dummy = arrayListOf(
-    GraphDto("8/7", 1.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-    GraphDto("8/8", 2.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-    GraphDto("8/9", 3.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-    GraphDto("8/10", 1.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-    GraphDto("8/11", 9.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-    GraphDto("8/12", 7.0f, TodoDto(1, "", LocalDate.now(), false, 0)),
-)
 
 @Composable
 fun GraphScreen(
@@ -117,7 +109,11 @@ fun GraphScreen(
                             .padding(top = 25.dp)
                             .padding(bottom = 10.dp),
                         height = 150.dp,
-                        data = value.todoBarList
+                        data = value.todoBarList,
+                        labels = arrayListOf(
+                            "할 일" to MaterialTheme.colorScheme.tertiary,
+                            "완료" to MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
+                        )
                     ) {
                         Log.d("TAG", "$it - GraphScreen() called")
                     }

@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
@@ -30,6 +31,7 @@ fun FlayBar(
     width: Dp,
     xText: String? = null,
     density: Density = LocalDensity.current,
+    color: Color = MaterialTheme.colorScheme.tertiary,
     measuredTextCallback: (Dp) -> Unit = {},
 ) {
     Column(
@@ -47,7 +49,7 @@ fun FlayBar(
                 topStart = 10.dp,
                 topEnd = 10.dp
             ),
-            color = MaterialTheme.colorScheme.tertiary
+            color = color
         ) {}
         if (xText != null) {
             FlayText(text = xText, fontSize = 11.sp, modifier = Modifier.onGloballyPositioned { coordinates ->

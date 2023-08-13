@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bestswlkh0310.flay.data.repository.TodoRepository
 import com.bestswlkh0310.flay.domain.model.TodoDto
 import com.bestswlkh0310.flay.domain.model.base.GraphDto
-import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -16,14 +15,13 @@ import javax.inject.Inject
 data class GraphState(
     var startDay: LocalDate,
     var todoBarList: MutableList<GraphDto<List<TodoDto>>> = arrayListOf(),
-    var clickedBar: List<TodoDto> = arrayListOf()
+    var selectedBar: List<TodoDto> = arrayListOf()
 )
 
 sealed class SideEffect {
     object WrongDate: SideEffect()
     object None: SideEffect()
 }
-
 
 @HiltViewModel
 class GraphViewModel @Inject constructor(
@@ -44,6 +42,7 @@ class GraphViewModel @Inject constructor(
                 list.add(GraphDto(
                     x = startDay.month.value.toString() + "/" + startDay.plusDays(i.toLong()).dayOfMonth.toString(),
                     y = todoList.filter { it.isDone }.size.toFloat(),
+                    y2 = todoList.size.toFloat(),
                     data = todoList
                 ))
             }
