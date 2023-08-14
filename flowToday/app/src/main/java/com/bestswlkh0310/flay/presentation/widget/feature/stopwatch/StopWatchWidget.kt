@@ -25,8 +25,4 @@ class StopWatchWidget : GlanceAppWidget() {
         }
     }
 
-    @Composable
-    fun StopWatchWidgetScreen() {
-        Text(text = "test")
-    }
 }
