@@ -8,7 +8,7 @@ data class TodoDto(
     val todo: String,
     val createdTime: LocalDate,
     val isDone: Boolean,
-    val position: Int
+    var position: Int
 ) {
     fun toEntity(): TodoEntity {
         return TodoEntity(

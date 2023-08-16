@@ -13,12 +13,20 @@ import javax.inject.Inject
 
 data class TodoState(
     val todo: String = "",
-    val todayTodoList: List<TodoDto?> = arrayListOf()
+    val todayTodoList: List<TodoDto?> = arrayListOf(),
+    val clickedTodo: TodoDto = TodoDto(
+        idx = -1,
+        "",
+        LocalDate.now(),
+        false,
+        1
+    )
 )
 
 sealed class SideEffect {
     object None: SideEffect()
     object WrongTodo: SideEffect()
+    object EditTodoComplete: SideEffect()
 }
 
 @HiltViewModel
@@ -90,7 +98,43 @@ class TodoViewModel @Inject constructor(
         }
     }
 
+    fun updateClickedTodo(todo: TodoDto) {
+        _state.value = _state.value.copy(clickedTodo = todo)
+    }
+
+    fun deleteTodo() {
+        val value = _state.value
+        viewModelScope.launch {
+            val delPosition = value.clickedTodo.position
+            todoRepository.deleteTodo(value.clickedTodo)
+            value.todayTodoList.forEach {
+                if (it != null && it.position > delPosition) {
+                    it.position--
+                }
+            }
+            loadTodoList()
+        }
+    }
+
+    fun updateTodoComplete() {
+        viewModelScope.launch {
+            todoRepository.updateTodo(_state.value.clickedTodo)
+            _sideEffect.value = SideEffect.EditTodoComplete
+            loadTodoList()
+        }
+    }
+
+    fun updateEditTodoText(it: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(clickedTodo = _state.value.clickedTodo.copy(todo = it))
+        }
+    }
+
     private fun removeAddTodo() {
         _state.value = _state.value.copy(todo = "")
+    }
+
+    fun noneEffect() {
+        _sideEffect.value = SideEffect.None
     }
 }

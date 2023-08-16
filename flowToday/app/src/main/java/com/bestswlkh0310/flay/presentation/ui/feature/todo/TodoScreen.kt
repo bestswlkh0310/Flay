@@ -24,7 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,15 +35,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bestswlkh0310.flay.R
 import com.bestswlkh0310.flay.presentation.ui.FlayNavigationActions
+import com.bestswlkh0310.flay.presentation.ui.component.EditStopWatchDialog
+import com.bestswlkh0310.flay.presentation.ui.component.EditTodoDialog
 import com.bestswlkh0310.flay.presentation.ui.component.FlayButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayCheckBox
+import com.bestswlkh0310.flay.presentation.ui.component.FlayDialog
 import com.bestswlkh0310.flay.presentation.ui.component.FlayIconButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayLazyColumn
 import com.bestswlkh0310.flay.presentation.ui.component.FlayLazyColumnItem
@@ -63,20 +67,22 @@ fun TodoScreen(
     val value by viewModel.state.collectAsState()
     val state by viewModel.sideEffect.collectAsState()
 
+    var showEditTodoDialog by remember { mutableStateOf(false) }
+    var showDeleteTodoDialog by remember { mutableStateOf(false) }
+
     when (state) {
         SideEffect.WrongTodo -> Toast.makeText(LocalContext.current, "할 일을 제대로 입력해 주세요", Toast.LENGTH_SHORT).show()
+        SideEffect.EditTodoComplete -> showEditTodoDialog = false
         else -> {}
     }
+    viewModel.noneEffect()
 
     val focusRequester = remember { FocusRequester() }
     val data = value.todayTodoList
 
-    Log.d("TAG", "$data - TodoScreen() called")
-
     val reorderableLazyListState = rememberReorderableLazyListState(
         onMove = { from, to ->
             viewModel.replaceTodo(from.index, to.index)
-            Log.d("TAG", "$from -> $to - TodoScreen() called")
         },
         canDragOver = { draggedOver, dragging -> draggedOver.index > 0 && dragging.index > 0 },
         listState = lazyListState
@@ -86,6 +92,54 @@ fun TodoScreen(
         viewModel.loadTodoList()
     }
 
+    if (showEditTodoDialog) {
+        EditTodoDialog(title = "수정 및 삭제", primaryButton = {
+            FlayButton(onClick = {
+                showEditTodoDialog = false
+                viewModel.updateTodoComplete()
+            }) {
+                FlayText(text = "저장")
+            }
+        }, secondaryButton = {
+            FlayButton(onClick = {
+                showEditTodoDialog = false
+            }) {
+                FlayText(text = "닫기")
+            }
+        },
+            deleteButton = {
+                FlayButton(onClick = {
+                    showDeleteTodoDialog = true
+                }) {
+                    FlayText(text = "삭제")
+                }
+            },
+            onDismiss = { showEditTodoDialog = false }, viewModel = viewModel)
+    }
+
+    if (showDeleteTodoDialog) {
+        FlayDialog(title = "정말 삭제하시겠습니까?",
+            primaryButton = {
+                FlayButton(onClick = {
+                    viewModel.deleteTodo()
+                    showDeleteTodoDialog = false
+                    showEditTodoDialog = false
+                }) {
+                    FlayText(text = "삭제")
+                }
+            }, secondaryButton = {
+                FlayButton(onClick = {
+                    showDeleteTodoDialog = false
+                }) {
+                    FlayText(text = "아니요")
+                }
+            }
+            , onDismiss = {
+                showDeleteTodoDialog = false
+            })
+    }
+
+
     FlayLazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -94,7 +148,6 @@ fun TodoScreen(
         lazyListState = reorderableLazyListState.listState,
         horizontalAlignment = Alignment.CenterHorizontally) {
         items(data, { it?.idx ?: -1 }) { item ->
-            Log.d("TAG", "11 $item - TodoScreen() called")
             if (item == null) {
                 Spacer(modifier = Modifier.height(80.dp))
                 ReorderableItem(reorderableState = reorderableLazyListState, key = null) {
@@ -110,7 +163,6 @@ fun TodoScreen(
                         iconId = R.drawable.ic_graph,
                         contentDescription = "graph",
                         onClick = {
-                            Log.d("TAG", "asd - TodoScreen() called")
                             routeAction.toGraph.invoke()
                         },
                         size = 22.dp
@@ -122,6 +174,8 @@ fun TodoScreen(
                     FlayLazyColumnItem(
                         modifier = Modifier.shadow(elevation.value),
                         onClick = {
+                            showEditTodoDialog = true
+                            viewModel.updateClickedTodo(item)
                             Log.d("TAG", "$item - TodoScreen() called")
                         }
                     ) {
@@ -193,7 +247,7 @@ fun TodoScreen(
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
                         value = value.todo,
-                        onChange = {viewModel.updateTodo(it)},
+                        onChange = { viewModel.updateTodo(it) },
                         paddingHorizontal = 0.dp,
                         paddingVertical = 0.dp
                     )

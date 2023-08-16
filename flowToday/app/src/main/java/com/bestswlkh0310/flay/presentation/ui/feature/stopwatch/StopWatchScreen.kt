@@ -23,7 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bestswlkh0310.flay.R
-import com.bestswlkh0310.flay.presentation.ui.FlayNavigationActions
 import com.bestswlkh0310.flay.presentation.ui.component.AddStopWatch
-import com.bestswlkh0310.flay.presentation.ui.component.EditStopWatch
+import com.bestswlkh0310.flay.presentation.ui.component.EditStopWatchDialog
 import com.bestswlkh0310.flay.presentation.ui.component.FlayButton
 import com.bestswlkh0310.flay.presentation.ui.component.FlayDialog
 import com.bestswlkh0310.flay.presentation.ui.component.FlayIconButton
@@ -59,7 +57,7 @@ fun StopWatchScreen(
 ) {
     var showAddStopWatchDialog by remember { mutableStateOf(false) }
     var showEditStopWatchDialog by remember { mutableStateOf(false) }
-    var showDeleteWatchDialog by remember { mutableStateOf(false) }
+    var showDeleteStopWatchDialog by remember { mutableStateOf(false) }
 
     val value by viewModel.state.collectAsState()
     val state by viewModel.sideEffect.collectAsState()
@@ -87,6 +85,7 @@ fun StopWatchScreen(
     if (showAddStopWatchDialog) {
         AddStopWatch(title ="제목과 종료일 입력해주세요", primaryButton = {
             FlayButton(onClick = {
+                showAddStopWatchDialog = false
                 viewModel.addStopWatch()
             }) {
                 FlayText(text = "완료")
@@ -102,8 +101,9 @@ fun StopWatchScreen(
     }
 
     if (showEditStopWatchDialog) {
-        EditStopWatch(title = "수정 및 삭제", primaryButton = {
+        EditStopWatchDialog(title = "수정 및 삭제", primaryButton = {
             FlayButton(onClick = {
+                showEditStopWatchDialog = false
                 viewModel.updateStopWatchComplete()
             }) {
                 FlayText(text = "저장")
@@ -117,7 +117,7 @@ fun StopWatchScreen(
         },
             deleteButton = {
             FlayButton(onClick = {
-                showDeleteWatchDialog = true
+                showDeleteStopWatchDialog = true
             }) {
                 FlayText(text = "삭제")
             }
@@ -125,25 +125,25 @@ fun StopWatchScreen(
             onDismiss = { showEditStopWatchDialog = false }, viewModel = viewModel)
     }
 
-    if (showDeleteWatchDialog) {
+    if (showDeleteStopWatchDialog) {
         FlayDialog(title = "정말 삭제하시겠습니까?",
             primaryButton = {
                 FlayButton(onClick = {
                     viewModel.deleteStopWatch()
-                    showDeleteWatchDialog = false
+                    showDeleteStopWatchDialog = false
                     showEditStopWatchDialog = false
                 }) {
                     FlayText(text = "삭제")
                 }
             }, secondaryButton = {
                 FlayButton(onClick = {
-                    showDeleteWatchDialog = false
+                    showDeleteStopWatchDialog = false
                 }) {
                     FlayText(text = "아니요")
                 }
             }
             , onDismiss = {
-                showDeleteWatchDialog = false
+                showDeleteStopWatchDialog = false
             })
     }
 
