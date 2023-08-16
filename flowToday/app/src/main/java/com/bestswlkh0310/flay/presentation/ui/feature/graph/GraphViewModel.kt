@@ -15,7 +15,8 @@ import javax.inject.Inject
 data class GraphState(
     var startDay: LocalDate,
     var todoBarList: MutableList<GraphDto<List<TodoDto>>> = arrayListOf(),
-    var selectedBar: List<TodoDto> = arrayListOf()
+    var selectedBar: List<TodoDto> = arrayListOf(),
+    var selectedBarDate: String = "",
 )
 
 sealed class SideEffect {
@@ -27,7 +28,10 @@ sealed class SideEffect {
 class GraphViewModel @Inject constructor(
     private val todoRepository: TodoRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow(GraphState(LocalDate.now()))
+    private val _state = MutableStateFlow(GraphState(
+        startDay = LocalDate.now(),
+        selectedBarDate = LocalDate.now().let { it.month.value.toString() + "/" + it.dayOfMonth.toString() }
+    ))
     val state = _state
 
     private val _sideEffect = MutableStateFlow<SideEffect>(SideEffect.None)
@@ -50,6 +54,13 @@ class GraphViewModel @Inject constructor(
         }
     }
 
+    fun loadTodayList() {
+        viewModelScope.launch {
+            val list = todoRepository.getTodoByLocalDate(LocalDate.now())
+            _state.value = _state.value.copy(selectedBar = list)
+        }
+    }
+
     fun loadToday() {
         val today = LocalDate.now()
         val currentDayOfWeek = today.dayOfWeek
@@ -66,5 +77,9 @@ class GraphViewModel @Inject constructor(
     fun loadRight() {
         _state.value = _state.value.copy(startDay = _state.value.startDay.plusWeeks(1))
         loadWeek()
+    }
+
+    fun updateSelectedTodo(todo: List<TodoDto>, date: String) {
+        _state.value = _state.value.copy(selectedBar = todo, selectedBarDate = date)
     }
 }

@@ -19,7 +19,6 @@ data class TodoState(
 sealed class SideEffect {
     object None: SideEffect()
     object WrongTodo: SideEffect()
-    object AddTodoComplete: SideEffect()
 }
 
 @HiltViewModel
@@ -66,7 +65,6 @@ class TodoViewModel @Inject constructor(
                     position = _state.value.todayTodoList.size
                 )
             )
-            _sideEffect.value = SideEffect.AddTodoComplete
             removeAddTodo()
             loadTodoList()
         }

@@ -65,14 +65,11 @@ fun TodoScreen(
 
     when (state) {
         SideEffect.WrongTodo -> Toast.makeText(LocalContext.current, "할 일을 제대로 입력해 주세요", Toast.LENGTH_SHORT).show()
-        SideEffect.AddTodoComplete -> {
-//            LocalView.current.clearFocus()
-        }
         else -> {}
     }
 
     val focusRequester = remember { FocusRequester() }
-    var data = value.todayTodoList
+    val data = value.todayTodoList
 
     Log.d("TAG", "$data - TodoScreen() called")
 
@@ -123,7 +120,10 @@ fun TodoScreen(
                 ReorderableItem(reorderableState = reorderableLazyListState, key = item) { isDragging ->
                     val elevation = animateDpAsState(if (isDragging) 100.dp else 0.dp, label = "")
                     FlayLazyColumnItem(
-                        modifier = Modifier.shadow(elevation.value)
+                        modifier = Modifier.shadow(elevation.value),
+                        onClick = {
+                            Log.d("TAG", "$item - TodoScreen() called")
+                        }
                     ) {
                         Row(
                             modifier = Modifier
