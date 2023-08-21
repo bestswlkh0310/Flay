@@ -119,7 +119,7 @@ fun GraphScreen(
                         .fillMaxWidth()
                         .padding(top = 25.dp)
                         .padding(bottom = 10.dp),
-                    height = 150.dp,
+                    height = 140.dp,
                     data = value.todoBarList,
                     labels = arrayListOf(
                         "할 일" to MaterialTheme.colorScheme.tertiary,

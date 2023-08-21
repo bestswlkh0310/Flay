@@ -56,7 +56,9 @@ android {
 dependencies {
     implementation("com.google.dagger:hilt-android:2.45")
     kapt("com.google.dagger:hilt-android-compiler:2.45")
+
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
     implementation ("androidx.glance:glance-appwidget:1.0.0-rc01")
     implementation ("androidx.glance:glance-material:1.0.0-rc01")
     implementation ("androidx.glance:glance-material3:1.0.0-rc01")
