@@ -48,31 +48,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val context = LocalContext.current
-                    var account by remember { mutableStateOf(GoogleSignIn.getLastSignedInAccount(context)) }
-                    var isLkh by remember { mutableStateOf((account?.email.toString() == "hhhello0507@gmail.com")) }
-                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-                    val mGoogleSignInClient = LocalContext.current.let { GoogleSignIn.getClient(it, gso) }
-
-                    if (!isLkh) {
-                        mGoogleSignInClient.signOut()
-                    }
-
                     val stopWatchLazyListState = rememberLazyListState()
                     val todoLazyListState = rememberLazyListState()
 
-//                    if (account != null && isLkh) {
                     NavigationGraph(
                         stopWatchLazyListState = stopWatchLazyListState,
                         todoLazyListState = todoLazyListState
                     )
-    //                    } else {
-//                        OnBoardScreen() { text, it ->
-//                            isLkh = it
-//                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-//                            account = GoogleSignIn.getLastSignedInAccount(context)
-//                        }
-//                    }
                 }
             }
         }
