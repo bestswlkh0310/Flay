@@ -10,6 +10,7 @@ import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.localDateTime
 import com.bestswlkh0310.flay.presentation.ui.utils.TimeCalculator.stringToLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,7 +44,7 @@ class StopWatchViewModel @Inject constructor(
     val state = _state
 
     private val _sideEffect = MutableStateFlow<SideEffect>(SideEffect.None)
-    val sideEffect = _sideEffect
+    val sideEffect = _sideEffect.asStateFlow()
 
     fun updateAddStopWatchTitleText(it: String) {
         _state.value = _state.value.copy(titleText = it)
